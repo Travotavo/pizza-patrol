@@ -69,7 +69,7 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        this.starfield.tilePositionX -=4;
+        this.starfield.tilePositionX -= 4;
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.sound.play('sfx_select');
@@ -81,12 +81,12 @@ class Play extends Phaser.Scene {
 
         if (!this.gameOver){
             this.p1Rocket.update();
-            this.ship01.update();
-            this.ship02.update();
-            this.ship03.update();
         }
 
         for (let i of this.livingShips){
+            if (!this.gameOver){
+                i.update();
+            }
             if(this.checkCollision(this.p1Rocket, i)) {
                 this.p1Rocket.reset();
                 this.shipExplode(i);
