@@ -40,6 +40,7 @@ class Pizza extends Phaser.GameObjects.Sprite {
                 if (toppin == Pizza.Toppings.Cheese){
                     return this.#changeTopping(toppin);
                 }
+                break;
             case Pizza.Toppings.Cheese:
                 if (toppin == Pizza.Toppings.Mushroom || toppin == Pizza.Toppings.Pepperoni){
                     return this.#changeTopping(toppin);
