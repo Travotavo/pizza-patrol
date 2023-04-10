@@ -5,7 +5,8 @@ class Pizza extends Phaser.GameObjects.Sprite {
         this.points = pointValue;
         this.moveSpeed = game.settings.pizzaSpeed;
         this.setTexture(texture, [0]);
-        
+        this.available = true;
+
         this.state = Pizza.Toppings.None;
     }
 
@@ -21,11 +22,13 @@ class Pizza extends Phaser.GameObjects.Sprite {
         this.x -= this.moveSpeed;
 
         if(this.x <= 0 - this.width){
-            this.x = game.config.width;
+            this.#changeTopping(Pizza.Toppings.None);
+            this.reset()
         }
     }
 
     reset() {
+        this.available = true;
         this.x = game.config.width;
     }
 
@@ -52,6 +55,7 @@ class Pizza extends Phaser.GameObjects.Sprite {
     }
 
     #changeTopping(toppin){
+        this.available = false;
         this.state = toppin;
         this.setFrame(toppin);
         return true;

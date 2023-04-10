@@ -98,6 +98,9 @@ class Play extends Phaser.Scene {
 
     checkCollision(rocket, pizza) {
         // simple AABB checking
+        if (!pizza.available){
+            return false;
+        }
         if (rocket.x < pizza.x + pizza.width && 
           rocket.x + rocket.width > pizza.x && 
           rocket.y < pizza.y + pizza.height &&
