@@ -6,10 +6,10 @@ class Pizza extends Phaser.GameObjects.Sprite {
         this.moveSpeed = game.settings.pizzaSpeed;
         this.setTexture(texture, [0]);
         
-        this.state = this.Toppings.None;
+        this.state = Pizza.Toppings.None;
     }
 
-    Toppings = {
+    static Toppings = {
         None: 0,
         Tomato: 1,
         Cheese: 2,
@@ -29,20 +29,24 @@ class Pizza extends Phaser.GameObjects.Sprite {
         this.x = game.config.width;
     }
 
-    addTopping(toppin){
-        console.log(toppin);
+    addTopping(toppin){   
         switch(this.state){
-            case this.Toppings.None:
-                if (toppin == this.Toppings.Tomato){
+            case Pizza.Toppings.None:
+                if (toppin == Pizza.Toppings.Tomato){
                     return this.#changeTopping(toppin);
                 }
                 break;
-            case this.Toppings.Cheese:
-                if (toppin == this.Toppings.Mushroom || toppin == this.Toppings.Pepperoni){
+            case Pizza.Toppings.Tomato:
+                if (toppin == Pizza.Toppings.Cheese){
+                    return this.#changeTopping(toppin);
+                }
+            case Pizza.Toppings.Cheese:
+                if (toppin == Pizza.Toppings.Mushroom || toppin == Pizza.Toppings.Pepperoni){
                     return this.#changeTopping(toppin);
                 }
                 break;
-        } 
+        }
+        console.log(toppin, this.state);
         return false;
     }
 

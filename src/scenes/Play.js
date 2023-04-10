@@ -4,8 +4,8 @@ class Play extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('rocket', './assets/objects/rocket.png');
-        this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('rocket', './assets/objects/toppings.png', {frameWidth: 32, frameHeight: 16, startFrame: 0, endFrame: 3});
+        this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.image('starfield', './assets/space.png');
         this.load.spritesheet('explosion', './assets/animations/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
@@ -34,6 +34,8 @@ class Play extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         this.anims.create({
             key: 'explode',
@@ -89,7 +91,7 @@ class Play extends Phaser.Scene {
             }
             if(this.checkCollision(this.p1Rocket, i)) {
                 this.p1Rocket.reset();
-                this.pizzaExplode(i);
+                this.pizzaSpread(i, this.p1Rocket.getTopping());
             }
         }
     }
@@ -106,19 +108,19 @@ class Play extends Phaser.Scene {
         }
     }
 
-    pizzaExplode(pizza){
-        console.log(pizza.addTopping(1));
-        pizza.alpha = 0;
-        let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0);
-        boom.anims.play('explode');
-        boom.on('animationcomplete', () => {
-            pizza.reset();
-            pizza.alpha = 1;
-            boom.destroy();
-        })
-
-        this.p1Score += pizza.points;
-        this.scoreLeft.text = this.p1Score;
-        this.sound.play('sfx_explosion');
+    pizzaSpread(pizza, toppin = 1){
+        if (pizza.addTopping(toppin)){
+            pizza.alpha = 0;
+            let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0);
+            boom.anims.play('explode');
+            boom.on('animationcomplete', () => {
+                pizza.reset();
+                pizza.alpha = 1;
+                boom.destroy();
+            });
+            this.p1Score += pizza.points;
+            this.scoreLeft.text = this.p1Score;
+            this.sound.play('sfx_explosion');
+        }
     }
 }
