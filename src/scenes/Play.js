@@ -4,10 +4,10 @@ class Play extends Phaser.Scene {
     }
 
     preload(){
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('rocket', './assets/objects/rocket.png');
+        this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         this.load.image('starfield', './assets/space.png');
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/animations/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
     create(){
@@ -24,11 +24,11 @@ class Play extends Phaser.Scene {
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30).setOrigin(0, 0);
+        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20).setOrigin(0,0);
+        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10).setOrigin(0,0);
         
-        this.livingShips = [this.ship01, this.ship02, this.ship03];
+        this.livingShips = [this.pizza01, this.pizza02, this.pizza03];
 
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -89,34 +89,35 @@ class Play extends Phaser.Scene {
             }
             if(this.checkCollision(this.p1Rocket, i)) {
                 this.p1Rocket.reset();
-                this.shipExplode(i);
+                this.pizzaExplode(i);
             }
         }
     }
 
-    checkCollision(rocket, ship) {
+    checkCollision(rocket, pizza) {
         // simple AABB checking
-        if (rocket.x < ship.x + ship.width && 
-          rocket.x + rocket.width > ship.x && 
-          rocket.y < ship.y + ship.height &&
-          rocket.height + rocket.y > ship. y) {
+        if (rocket.x < pizza.x + pizza.width && 
+          rocket.x + rocket.width > pizza.x && 
+          rocket.y < pizza.y + pizza.height &&
+          rocket.height + rocket.y > pizza. y) {
           return true;
         } else {
           return false;
         }
     }
 
-    shipExplode(ship){
-        ship.alpha = 0;
-        let boom = this.add.sprite(ship.x, ship.y, 'explosion').setOrigin(0, 0);
+    pizzaExplode(pizza){
+        console.log(pizza.addTopping(1));
+        pizza.alpha = 0;
+        let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0);
         boom.anims.play('explode');
         boom.on('animationcomplete', () => {
-            ship.reset();
-            ship.alpha = 1;
+            pizza.reset();
+            pizza.alpha = 1;
             boom.destroy();
         })
 
-        this.p1Score += ship.points;
+        this.p1Score += pizza.points;
         this.scoreLeft.text = this.p1Score;
         this.sound.play('sfx_explosion');
     }
