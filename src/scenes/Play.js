@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('rocket', './assets/objects/toppings.png', {frameWidth: 32, frameHeight: 16, startFrame: 0, endFrame: 3});
         this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.image('starfield', './assets/space.png');
+        this.load.image('belt', './assets/set/conveyor.png');
         this.load.spritesheet('explosion', './assets/animations/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
@@ -14,6 +15,12 @@ class Play extends Phaser.Scene {
         //space tile sprite
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
 
+        //Conveyors
+        this.conveyors = [
+            new Belt(this, borderUISize*4),
+            new Belt(this, borderUISize*5 + borderPadding*2),
+            new Belt(this, borderUISize*6 + borderPadding*4)
+        ];
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // white borders
@@ -71,7 +78,9 @@ class Play extends Phaser.Scene {
     }
 
     update(){
-        this.starfield.tilePositionX -= 4;
+        for (let i of this.conveyors){
+            i.update();
+        }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.sound.play('sfx_select');
