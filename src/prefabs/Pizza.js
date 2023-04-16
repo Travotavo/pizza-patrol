@@ -1,6 +1,7 @@
 class Pizza extends Phaser.GameObjects.Container {
     constructor(scene, x, y, texture, frame, pointValue, track){
         super(scene, x, y);
+        console.log(x);
         scene.add.existing(this);
         this.add(scene.add.sprite(0, 0, texture).setOrigin(0,0));
         this.components = [
@@ -34,9 +35,6 @@ class Pizza extends Phaser.GameObjects.Container {
                 this.#emptyPizza();
                 this.x = game.config.width;
             }
-            if(this.x > game.config.width){
-                this.x = game.config.width;
-            }
         }
     }
 
@@ -51,6 +49,9 @@ class Pizza extends Phaser.GameObjects.Container {
         if (config == undefined){
             this.track.flip();
             let temp = this.x + game.config.width/2;
+            if(temp > game.config.width){
+                temp = game.config.width;
+            }
             config = {
                 targets: this,
                 x: temp,
