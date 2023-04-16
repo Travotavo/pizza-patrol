@@ -5,7 +5,11 @@ class Play extends Phaser.Scene {
 
     preload(){
         this.load.spritesheet('rocket', './assets/objects/toppings.png', {frameWidth: 32, frameHeight: 16, startFrame: 0, endFrame: 3});
-        this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
+        this.load.image('pizza', './assets/objects/blank-pizza.png');
+        this.load.image('tomato', './assets/objects/placed-topping1.png');
+        this.load.image('cheese', './assets/objects/placed-topping2.png');
+        this.load.image('pepperoni', './assets/objects/placed-topping3.png');
+        this.load.image('mushroom', './assets/objects/placed-topping4.png');
         this.load.image('starfield', './assets/space.png');
         this.load.image('belt', './assets/set/conveyor.png');
         this.load.spritesheet('explosion', './assets/animations/tomato-splat.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
@@ -31,9 +35,9 @@ class Play extends Phaser.Scene {
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30, this.conveyors[0]).setOrigin(0, 0);
-        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20, this.conveyors[1]).setOrigin(0,0);
-        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10, this.conveyors[2]).setOrigin(0,0);
+        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30, this.conveyors[0])//.setOrigin(0, 0);
+        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20, this.conveyors[1])//.setOrigin(0,0);
+        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10, this.conveyors[2])//.setOrigin(0,0);
         
         this.livingShips = [this.pizza01, this.pizza02, this.pizza03];
 
@@ -110,9 +114,9 @@ class Play extends Phaser.Scene {
         if (!pizza.available){
             return false;
         }
-        if (rocket.x < pizza.x + pizza.width && 
+        if (rocket.x < pizza.x + pizza.hitboxWidth && 
           rocket.x + rocket.width > pizza.x && 
-          rocket.y < pizza.y + pizza.height &&
+          rocket.y < pizza.y + pizza.hitboxHeight &&
           rocket.height + rocket.y > pizza. y) {
           return true;
         } else {

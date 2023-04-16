@@ -1,10 +1,18 @@
-class Pizza extends Phaser.GameObjects.Sprite {
+class Pizza extends Phaser.GameObjects.Container {
     constructor(scene, x, y, texture, frame, pointValue, track){
-        super(scene, x, y, texture, frame);
+        super(scene, x, y);
         scene.add.existing(this);
+        this.add(scene.add.sprite(0, 0, texture).setOrigin(0,0));
+        this.components = [
+            scene.add.rectangle(0,0,64,32,0x00FF00).setOrigin(0,0).setVisible(false),
+            scene.add.sprite(0,0, 'tomato').setOrigin(0,0).setVisible(false),
+            scene.add.sprite(0,0, 'cheese').setOrigin(0,0).setVisible(false),
+            scene.add.sprite(0,0, 'pepperoni').setOrigin(0,0).setVisible(false),
+            scene.add.sprite(0,0, 'mushroom').setOrigin(0,0).setVisible(false)
+        ];
+        this.add(this.components);
         this.points = pointValue;
         this.moveSpeed = game.settings.pizzaSpeed;
-        this.setTexture(texture, [0]);
         this.available = true;
         this.scene = scene;
         this.track = track;
@@ -27,7 +35,17 @@ class Pizza extends Phaser.GameObjects.Sprite {
                 this.#emptyPizza();
                 this.x = game.config.width;
             }
+            if(this.x > game.config.width){
+                this.x = game.config.width;
+            }
         }
+    }
+
+    get hitboxWidth(){
+        return this.components[0].width;
+    }
+    get hitboxHeight(){
+        return this.components[0].height;
     }
 
     reset(config = undefined) {
@@ -75,12 +93,14 @@ class Pizza extends Phaser.GameObjects.Sprite {
     #changeTopping(toppin){
         this.available = false;
         this.state = toppin;
-        this.setFrame(toppin);
+        this.components[toppin].setVisible(true);
         return true;
     }
 
     #emptyPizza(){
         this.state = Pizza.Toppings.None;
-        this.setFrame(Pizza.Toppings.None);
+        for (let i of this.components){
+            i.setVisible(false);
+        }
     }
 }
