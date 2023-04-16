@@ -8,7 +8,7 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('pizza', './assets/objects/pizza.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 4});
         this.load.image('starfield', './assets/space.png');
         this.load.image('belt', './assets/set/conveyor.png');
-        this.load.spritesheet('explosion', './assets/animations/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/animations/tomato-splat.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
     }
 
     create(){
@@ -31,9 +31,9 @@ class Play extends Phaser.Scene {
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30).setOrigin(0, 0);
-        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20).setOrigin(0,0);
-        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10).setOrigin(0,0);
+        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30, this.conveyors[0]).setOrigin(0, 0);
+        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20, this.conveyors[1]).setOrigin(0,0);
+        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10, this.conveyors[2]).setOrigin(0,0);
         
         this.livingShips = [this.pizza01, this.pizza02, this.pizza03];
 
@@ -46,7 +46,7 @@ class Play extends Phaser.Scene {
 
         this.anims.create({
             key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion',  {start: 0, end: 9, first: 0}),
+            frames: this.anims.generateFrameNumbers('explosion',  {start: 0, end: 13, first: 0}),
             frameRate: 30
         });
 
@@ -122,12 +122,10 @@ class Play extends Phaser.Scene {
 
     pizzaSpread(pizza, toppin = 1){
         if (pizza.addTopping(toppin)){
-            pizza.alpha = 0;
-            let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0);
+            let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0.5);
             boom.anims.play('explode');
             boom.on('animationcomplete', () => {
                 pizza.reset();
-                pizza.alpha = 1;
                 boom.destroy();
             });
             this.p1Score += pizza.points;
