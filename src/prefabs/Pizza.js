@@ -16,8 +16,7 @@ class Pizza extends Phaser.GameObjects.Container {
         this.available = true;
         this.scene = scene;
         this.track = track;
-
-        this.state = Pizza.Toppings.None;
+        this.toppingList = [];
     }
 
     static Toppings = {
@@ -68,7 +67,32 @@ class Pizza extends Phaser.GameObjects.Container {
         this.scene.tweens.add(config);
     }
 
-    addTopping(toppin){   
+    checkTopping(toppin){
+        //Prettier than the if, if, else ladder
+        switch (this.toppingList.length){
+            case 0: // If blank, must use tomato
+                if (toppin == Pizza.Toppings.Tomato){
+                    this.available = false;
+                    return true;
+                }
+                return false;
+            case 1: // First ingredient must be tomato, then cheese
+                if (toppin == Pizza.Toppings.Cheese){
+                    this.available = false;
+                    return true;
+                }
+                return false;
+            default: //Any other ingredients can be stacked onto the pizza after tomato and cheese
+                if (this.toppingList.includes(toppin)){
+                    return false;
+                }
+                this.available = false;
+                return true;
+        }
+    }
+
+    //Obsolete topping check system
+    /*addTopping(toppin){   
         switch(this.state){
             case Pizza.Toppings.None:
                 if (toppin == Pizza.Toppings.Tomato){
@@ -88,17 +112,15 @@ class Pizza extends Phaser.GameObjects.Container {
         }
         console.log(toppin, this.state);
         return false;
-    }
+    }*/
 
-    #changeTopping(toppin){
-        this.available = false;
-        this.state = toppin;
+    spreadTopping(toppin){
+        this.toppingList.push(toppin);
         this.components[toppin].setVisible(true);
-        return true;
     }
 
     #emptyPizza(){
-        this.state = Pizza.Toppings.None;
+        this.toppingList = [];
         for (let i of this.components){
             i.setVisible(false);
         }

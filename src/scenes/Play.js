@@ -125,10 +125,11 @@ class Play extends Phaser.Scene {
     }
 
     pizzaSpread(pizza, toppin = 1){
-        if (pizza.addTopping(toppin)){
+        if (pizza.checkTopping(toppin)){
             let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0.5);
             boom.anims.play('explode');
             boom.on('animationcomplete', () => {
+                pizza.spreadTopping(toppin);
                 pizza.reset();
                 boom.destroy();
             });
