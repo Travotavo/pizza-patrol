@@ -81,9 +81,9 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
 
-    update(){
+    update(time, delta){
         for (let i of this.conveyors){
-            i.update();
+            i.update(delta);
         }
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -95,12 +95,12 @@ class Play extends Phaser.Scene {
         }
 
         if (!this.gameOver){
-            this.p1Rocket.update();
+            this.p1Rocket.update(delta);
         }
 
         for (let i of this.livingShips){
             if (!this.gameOver){
-                i.update();
+                i.update(delta);
             }
             if(this.checkCollision(this.p1Rocket, i)) {
                 this.p1Rocket.reset();

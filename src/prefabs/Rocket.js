@@ -13,7 +13,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
     //There has to be a way to do this that is leagues better, but that's for later!
     Topps = [1,2,3,4];
 
-    update(){
+    update(delta){
         if (!this.isFiring){
             if (Phaser.Input.Keyboard.JustDown(keyQ)){
                 this.#cycleTop(-1);
@@ -22,9 +22,9 @@ class Rocket extends Phaser.GameObjects.Sprite {
             }
 
             if(keyLEFT.isDown && this.x >=borderUISize + this.width){
-                this.x  -= this.moveSpeed;
+                this.x  -= this.moveSpeed * (delta/10);
             } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width) {
-                this.x += this.moveSpeed;
+                this.x += this.moveSpeed * (delta/10);
             } 
         }
 
@@ -34,7 +34,7 @@ class Rocket extends Phaser.GameObjects.Sprite {
         }
 
         if (this.isFiring && this.y >= borderUISize * 3 + borderPadding) {
-            this.y -= this.moveSpeed * 2;
+            this.y -= this.moveSpeed * 2 * (delta/10);
         }
 
         if (this.y <= borderUISize * 3 + borderPadding) {

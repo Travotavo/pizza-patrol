@@ -28,9 +28,9 @@ class Pizza extends Phaser.GameObjects.Container {
         Mushroom: 4
     }
     
-    update() {
+    update(delta) {
         if (this.available){
-            this.x -= this.moveSpeed;
+            this.x -= this.moveSpeed * (delta/10);
             if(this.x <= 0 - this.width){
                 this.#emptyPizza();
                 this.x = game.config.width;

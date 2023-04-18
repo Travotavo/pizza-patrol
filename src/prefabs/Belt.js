@@ -6,8 +6,8 @@ class Belt extends Phaser.GameObjects.TileSprite {
         this.reverse = false;
     }
 
-    update(){
-        this.tilePositionX += 2 * ((this.reverse)?-1:1);
+    update(delta){
+        this.tilePositionX += 2 * ((this.reverse)?-1:1) * (delta/10);
     }
 
     flip(){
