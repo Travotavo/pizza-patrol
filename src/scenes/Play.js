@@ -21,9 +21,9 @@ class Play extends Phaser.Scene {
 
         //Conveyors
         this.conveyors = [
-            new Belt(this, borderUISize*4),
             new Belt(this, borderUISize*5 + borderPadding*2),
-            new Belt(this, borderUISize*6 + borderPadding*4)
+            new Belt(this, borderUISize*6 + borderPadding*4),
+            new Belt(this, borderUISize*7 + borderPadding*6)
         ];
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
@@ -35,9 +35,9 @@ class Play extends Phaser.Scene {
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*4, 'pizza', 0, 30, this.conveyors[0])//.setOrigin(0, 0);
-        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'pizza', 0, 20, this.conveyors[1])//.setOrigin(0,0);
-        this.pizza03 = new Pizza(this, game.config.width, borderUISize*6 + borderPadding*4, 'pizza', 0, 10, this.conveyors[2])//.setOrigin(0,0);
+        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*5 + borderPadding*2, 'pizza', 0, 30, this.conveyors[0])//.setOrigin(0, 0);
+        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*6 + borderPadding*4, 'pizza', 0, 20, this.conveyors[1])//.setOrigin(0,0);
+        this.pizza03 = new Pizza(this, game.config.width, borderUISize*7 + borderPadding*6, 'pizza', 0, 10, this.conveyors[2])//.setOrigin(0,0);
         
         this.livingShips = [this.pizza01, this.pizza02, this.pizza03];
 

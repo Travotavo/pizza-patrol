@@ -7,6 +7,12 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/sounds/select.wav');
         this.load.audio('sfx_explosion', './assets/sounds/delayed_blast.wav');
         this.load.audio('sfx_rocket', './assets/sounds/rocket_shoot.wav');
+
+        this.load.image('bg', './assets/menu/bg.png');
+        this.load.image('cursor', './assets/menu/cursor.png');
+        this.load.image('option1', './assets/menu/option1.png');
+        this.load.image('option2', './assets/menu/option2.png');
+        this.load.image('option3', './assets/menu/option3.png');
       }
 
     create(){
@@ -24,34 +30,64 @@ class Menu extends Phaser.Scene {
             fixedWidth:0
         }
 
-        this.add.text(game.config.width/2, game.config.height/2 - borderUISize - borderPadding, 'PIZZA PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use ←→ arrows to move & (F) to toss!', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize + borderPadding, 'Use (Q) & (E) to cycle toppings!', menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00';
-        menuConfig.color = '#000';
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize * 2 + borderPadding * 2, 'Use ← for Novice and → for Expert', menuConfig).setOrigin(0.5);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keyLEFTa = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyRIGHTa = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        confirm1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+        confirm2 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+
+        this.add.sprite(0,0, 'bg').setOrigin(0,0);
+        this.options = [
+          this.add.sprite(480, 280,'option1').setOrigin(1,1),
+          this.add.sprite(580, 300,'option2').setOrigin(1,1),
+          this.add.sprite(490, 380,'option3').setOrigin(1,1)
+        ];
+        this.cursor = this.add.sprite(0,0,'cursor').setOrigin(1, 0.5);
+        this.cursor.x = this.options[0].x;
+        this.cursor.y = this.options[0].y;
+        this.selected = 0;
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-          // easy mode
-          game.settings = {
-            pizzaSpeed: 3,
-            gameTimer: 60000    
+        if (Phaser.Input.Keyboard.JustDown(confirm1) || Phaser.Input.Keyboard.JustDown(confirm2) 
+              || Phaser.Input.Keyboard.JustDown(keyF)) {
+          switch(this.selected){
+            case 0:
+              game.settings = {
+                players: 1,
+                pizzaSpeed: 2,
+                gameTimer: 60000    
+              }
+              this.sound.play('sfx_select');
+              this.scene.start('playScene');
+              break;
+            case 1:
+              game.settings = {
+                players: 2,
+                pizzaSpeed: 2,
+                gameTimer: 60000    
+              }
+              this.sound.play('sfx_select');
+              this.scene.start('playScene');
+              break;
+            case 2:
+              // Show help screen
+              break;
           }
-          this.sound.play('sfx_select');
-          this.scene.start('playScene');    
         }
-        if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
-          // hard mode
-          game.settings = {
-            pizzaSpeed: 4,
-            gameTimer: 45000    
-          }
-          this.sound.play('sfx_select');
-          this.scene.start('playScene');    
+
+        if ((Phaser.Input.Keyboard.JustDown(keyLEFT) || Phaser.Input.Keyboard.JustDown(keyLEFTa)) && this.selected > 0) {
+          this.selected -= 1;
+          this.cursor.x = this.options[this.selected].x;
+          this.cursor.y = this.options[this.selected].y;
         }
+        if ((Phaser.Input.Keyboard.JustDown(keyRIGHT) || Phaser.Input.Keyboard.JustDown(keyRIGHTa)) && this.selected < 2) {
+          this.selected += 1;
+          this.cursor.x = this.options[this.selected].x;
+          this.cursor.y = this.options[this.selected].y;
+        }
+      
       }
 }
