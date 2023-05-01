@@ -52,10 +52,11 @@ class Pizza extends Phaser.GameObjects.Container {
             if(temp > game.config.width){
                 temp = game.config.width;
             }
+            let span = (1000/320) * (temp - this.x);
             config = {
                 targets: this,
                 x: temp,
-                duration: 1000,
+                duration: span,
                 repeat: 0,
                 hold: 0,
                 ease: 'linear',

@@ -89,17 +89,28 @@ class Play extends Phaser.Scene {
         this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
 
         this.gameOver = false;
-
+        this.badpractice = 1;
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            for (let i of this.conveyors){
+                i.pause();
+            }
             this.bgm.stop();
+            this.bgm.destroy();
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart ← or for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
+        this.hurry_up = this.time.delayedCall(30000, () => {
+            this.bgm.stop();
+            this.bgm = this.sound.add('hurry_bgm', {loop: true});
+            this.badpractice = 1.5;
+            this.bgm.play();
+        }, null, this);
     }
 
     update(time, delta){
+        delta = delta * this.badpractice;
         for (let i of this.conveyors){
             i.update(delta);
         }
