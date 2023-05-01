@@ -13,7 +13,8 @@ class Play extends Phaser.Scene {
         this.load.image('cheese', './assets/objects/placed-topping2.png');
         this.load.image('pepperoni', './assets/objects/placed-topping3.png');
         this.load.image('mushroom', './assets/objects/placed-topping4.png');
-        this.load.image('starfield', './assets/space.png');
+        this.load.image('passerbys', './assets/set/people-1.png');
+        this.load.image('passer-passerbys', './assets/set/people-2.png');
         this.load.image('belt', './assets/set/conveyor.png');
         this.load.spritesheet('explosion-1', './assets/animations/tomato-splat.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
         this.load.spritesheet('explosion-2', './assets/animations/cheese-grate.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
@@ -28,9 +29,13 @@ class Play extends Phaser.Scene {
     create(){
         this.bgm = this.sound.add('game_bgm', {loop: true});
         this.bgm.play();
-        //Set pieces, only conveyors need to be tracked at the moment
+
+
+        //Set pieces
         this.add.sprite(0, game.config.height, 'floor').setOrigin(0, 1);
 
+        this.parallax2 = this.add.tileSprite(0, borderUISize + borderPadding, 640, 63, 'passer-passerbys').setOrigin(0,0);
+        this.parallax1 = this.add.tileSprite(0, borderUISize + borderPadding * 2, 640, 63, 'passerbys').setOrigin(0,0);
         //Conveyors
         let belt1 = new Belt(this, borderUISize*3 + borderPadding*2);
         this.add.sprite(0, borderUISize*3 + borderPadding*2 + 32, 'counter').setOrigin(0, 0);
@@ -53,9 +58,7 @@ class Play extends Phaser.Scene {
             belt2,
             belt3
         ];
-        // green UI background
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
-        // white borders
+        
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
@@ -109,11 +112,18 @@ class Play extends Phaser.Scene {
             fixedWidth:100
         }
 
-        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
+        // green UI background
+        this.add.rectangle(0, 0, borderUISize + borderPadding * 2, game.config.height, 0x000000).setOrigin(0, 0);
+        // white borders
+
+        this.scoreLeft = this.add.text(borderUISize + borderPadding, borderPadding, this.p1Score, scoreConfig);
+        
+        
+        
+        
 
         this.gameOver = false;
         this.badpractice = 1;
-        scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
             for (let i of this.conveyors){
                 i.pause();
@@ -149,23 +159,27 @@ class Play extends Phaser.Scene {
                 }
             }
             this.tweens.add(fadeConfig);
-            //this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            //this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart (SPACE) or for Menu', scoreConfig).setOrigin(0.5);
         }, null, this);
+
         this.hurry_up = this.time.delayedCall(30000, () => {
             this.bgm.stop();
             this.bgm = this.sound.add('hurry_bgm', {loop: true});
             this.badpractice = 1.5;
             this.bgm.play();
         }, null, this);
+        console.log(this.clock);
+        this.timeLeft = this.add.text(borderUISize + borderPadding, borderUISize * 2, this.clock.getOverallRemaining()/1000, scoreConfig);
     }
 
     update(time, delta){
+        this.parallax2.tilePositionX = this.p1Rocket.x/30;
+        this.parallax1.tilePositionX = this.p1Rocket.x/10;
+        this.timeLeft.text = Math.trunc(this.clock.getOverallRemaining()/1000);
+
         delta = delta * this.badpractice;
         for (let i of this.conveyors){
             i.update(delta);
         }
-
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.sound.play('sfx_select');
             this.scene.restart();

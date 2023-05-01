@@ -22,9 +22,9 @@ class Rocket extends Phaser.GameObjects.Sprite {
             }
         }
 
-        if(keyLEFT.isDown && this.x >=borderUISize + this.width){
+        if(keyLEFT.isDown && this.x >=borderUISize + borderPadding + this.width){
             this.x  -= this.moveSpeed * (delta/10);
-        } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width) {
+        } else if (keyRIGHT.isDown && this.x <= game.config.width - this.width) {
             this.x += this.moveSpeed * (delta/10);
         } 
 
