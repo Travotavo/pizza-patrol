@@ -67,6 +67,7 @@ class Play extends Phaser.Scene {
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        confirm1 = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         this.anims.create({
             key: 'explode-1',
@@ -116,7 +117,7 @@ class Play extends Phaser.Scene {
             this.bgm.stop();
             this.bgm.destroy();
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart ← or for Menu', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart (SPACE) or for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
         this.hurry_up = this.time.delayedCall(30000, () => {
@@ -137,7 +138,7 @@ class Play extends Phaser.Scene {
             this.sound.play('sfx_select');
             this.scene.restart();
         }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(confirm1)) {
             this.scene.start("menuScene");
         }
 
