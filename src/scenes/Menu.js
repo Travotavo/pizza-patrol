@@ -63,7 +63,8 @@ class Menu extends Phaser.Scene {
               game.settings = {
                 players: 1,
                 pizzaSpeed: 2,
-                gameTimer: 60000    
+                gameTimer: 60000,
+                player1score:null
               }
               this.sound.play('sfx_select');
               this.scene.start('playScene');
@@ -72,7 +73,9 @@ class Menu extends Phaser.Scene {
               game.settings = {
                 players: 2,
                 pizzaSpeed: 2,
-                gameTimer: 60000    
+                gameTimer: 60000,
+                player1score:null,
+                player2score:null   
               }
               this.sound.play('sfx_select');
               this.scene.start('playScene');

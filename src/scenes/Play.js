@@ -21,6 +21,10 @@ class Play extends Phaser.Scene {
         this.load.spritesheet('explosion-4', './assets/animations/mushroom-slice.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
     }
 
+    init(data){
+        this.carryOver = data.carryOver
+    }
+
     create(){
         this.bgm = this.sound.add('game_bgm', {loop: true});
         this.bgm.play();
@@ -114,11 +118,39 @@ class Play extends Phaser.Scene {
             for (let i of this.conveyors){
                 i.pause();
             }
+
             this.bgm.stop();
             this.bgm.destroy();
-            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart (SPACE) or for Menu', scoreConfig).setOrigin(0.5);
+            
+            //Place tween here for game over/pass to player 2 screen
+            let fade = this.add.rectangle(0, 0, game.config.width, game.config.height, 0x000000).setOrigin(0, 0);
+            fade.alpha = 0;
             this.gameOver = true;
+
+            let fadeConfig = {
+                targets: fade,
+                alpha: 1,
+                duration: 500,
+                repeat: 0,
+                hold: 0,
+                ease: 'linear',
+                onComplete: ()=>{
+                    if (game.settings.players == 2){
+                        if (this.carryOver == null){
+                            this.scene.start("passScene", {carryOver: this.p1Score});
+                        }
+                        else{
+                            this.scene.start("scoreScene", {carryOver: this.carryOver, carryOver2: this.p1Score});
+                        }
+                    }
+                    else{
+                        this.scene.start("scoreScene", {carryOver: this.p1Score});
+                    }
+                }
+            }
+            this.tweens.add(fadeConfig);
+            //this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            //this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart (SPACE) or for Menu', scoreConfig).setOrigin(0.5);
         }, null, this);
         this.hurry_up = this.time.delayedCall(30000, () => {
             this.bgm.stop();
