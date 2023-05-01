@@ -15,7 +15,10 @@ class Play extends Phaser.Scene {
         this.load.image('mushroom', './assets/objects/placed-topping4.png');
         this.load.image('starfield', './assets/space.png');
         this.load.image('belt', './assets/set/conveyor.png');
-        this.load.spritesheet('explosion', './assets/animations/tomato-splat.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
+        this.load.spritesheet('explosion-1', './assets/animations/tomato-splat.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
+        this.load.spritesheet('explosion-2', './assets/animations/cheese-grate.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
+        this.load.spritesheet('explosion-3', './assets/animations/pepperoni-laying.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 11});
+        this.load.spritesheet('explosion-4', './assets/animations/mushroom-slice.png', {frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
     }
 
     create(){
@@ -66,8 +69,23 @@ class Play extends Phaser.Scene {
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         this.anims.create({
-            key: 'explode',
-            frames: this.anims.generateFrameNumbers('explosion',  {start: 0, end: 13, first: 0}),
+            key: 'explode-1',
+            frames: this.anims.generateFrameNumbers('explosion-1',  {start: 0, end: 13, first: 0}),
+            frameRate: 24
+        });
+        this.anims.create({
+            key: 'explode-2',
+            frames: this.anims.generateFrameNumbers('explosion-2',  {start: 0, end: 13, first: 0}),
+            frameRate: 24
+        });
+        this.anims.create({
+            key: 'explode-3',
+            frames: this.anims.generateFrameNumbers('explosion-3',  {start: 0, end: 11, first: 0}),
+            frameRate: 24
+        });
+        this.anims.create({
+            key: 'explode-4',
+            frames: this.anims.generateFrameNumbers('explosion-4',  {start: 0, end: 13, first: 0}),
             frameRate: 24
         });
 
@@ -156,8 +174,8 @@ class Play extends Phaser.Scene {
     pizzaSpread(pizza, toppin = 1){
         if (pizza.checkTopping(toppin)){
             pizza.track.pause();
-            let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0.5);
-            boom.anims.play('explode');
+            let boom = this.add.sprite(pizza.x, pizza.y, 'explosion-' + toppin).setOrigin(0, 0.5);
+            boom.anims.play('explode-' + toppin);
             boom.on('animationcomplete', () => {
                 pizza.spreadTopping(toppin);
                 pizza.reset();
