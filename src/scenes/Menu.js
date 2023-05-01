@@ -11,6 +11,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('hurry_bgm', './assets/sounds/pizza_patrol_sped.wav');
 
         this.load.image('bg', './assets/menu/bg.png');
+        this.load.image('help', './assets/menu/help.png');
         this.load.image('cursor', './assets/menu/cursor.png');
         this.load.image('option1', './assets/menu/option1.png');
         this.load.image('option2', './assets/menu/option2.png');
@@ -50,6 +51,8 @@ class Menu extends Phaser.Scene {
         this.cursor.x = this.options[0].x;
         this.cursor.y = this.options[0].y;
         this.selected = 0;
+        this.help = this.add.sprite(0,0, 'help').setOrigin(0,0);
+        this.help.visible = false;
     }
 
     update() {
@@ -75,7 +78,7 @@ class Menu extends Phaser.Scene {
               this.scene.start('playScene');
               break;
             case 2:
-              // Show help screen
+              this.help.visible = !fthis.help.visible;
               break;
           }
         }
