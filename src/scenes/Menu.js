@@ -78,7 +78,7 @@ class Menu extends Phaser.Scene {
               this.scene.start('playScene');
               break;
             case 2:
-              this.help.visible = !fthis.help.visible;
+              this.help.visible = !this.help.visible;
               break;
           }
         }
