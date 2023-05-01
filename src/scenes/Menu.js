@@ -7,6 +7,8 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_select', './assets/sounds/select.wav');
         this.load.audio('sfx_explosion', './assets/sounds/delayed_blast.wav');
         this.load.audio('sfx_rocket', './assets/sounds/rocket_shoot.wav');
+        this.load.audio('game_bgm', './assets/sounds/pizza_patrol_norm.wav');
+        this.load.audio('hurry_bgm', './assets/sounds/pizza_patrol_norm.wav');
 
         this.load.image('bg', './assets/menu/bg.png');
         this.load.image('cursor', './assets/menu/cursor.png');

@@ -4,6 +4,9 @@ class Play extends Phaser.Scene {
     }
 
     preload(){
+        this.load.image('floor', './assets/set/floor.png');
+        this.load.image('counter', './assets/set/counter-bottom.png');
+        this.load.image('counter-top', './assets/set/counter-top.png');
         this.load.spritesheet('rocket', './assets/objects/toppings.png', {frameWidth: 32, frameHeight: 16, startFrame: 0, endFrame: 3});
         this.load.image('pizza', './assets/objects/blank-pizza.png');
         this.load.image('tomato', './assets/objects/placed-topping1.png');
@@ -16,27 +19,41 @@ class Play extends Phaser.Scene {
     }
 
     create(){
-        //space tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0,0);
+        this.bgm = this.sound.add('game_bgm', {loop: true});
+        this.bgm.play();
+        //Set pieces, only conveyors need to be tracked at the moment
+        this.add.sprite(0, game.config.height, 'floor').setOrigin(0, 1);
 
         //Conveyors
+        let belt1 = new Belt(this, borderUISize*3 + borderPadding*2);
+        this.add.sprite(0, borderUISize*3 + borderPadding*2 + 32, 'counter').setOrigin(0, 0);
+        this.add.sprite(0, borderUISize*3 + borderPadding*2 + 1, 'counter-top').setOrigin(0, 1);
+        
+        
+        let belt2 = new Belt(this, borderUISize*5 + borderPadding*4);
+        let counter2 = this.add.tileSprite(0, borderUISize*5 + borderPadding*4 + 32, 640, 63, 'counter').setOrigin(0,0);
+        counter2.tilePositionX = 64;
+        this.add.sprite(0, borderUISize*5 + borderPadding*4 + 1, 'counter-top').setOrigin(0, 1);
+        
+        
+        let belt3 = new Belt(this, borderUISize*7 + borderPadding*6);
+        let counter3 = this.add.tileSprite(0, borderUISize*7 + borderPadding*6 + 32, 640, 63, 'counter').setOrigin(0,0);
+        counter3.tilePositionX = 128;
+        this.add.sprite(0, borderUISize*7 + borderPadding*6 + 1, 'counter-top').setOrigin(0, 1);
+
         this.conveyors = [
-            new Belt(this, borderUISize*5 + borderPadding*2),
-            new Belt(this, borderUISize*6 + borderPadding*4),
-            new Belt(this, borderUISize*7 + borderPadding*6)
+            belt1,
+            belt2,
+            belt3
         ];
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
         // white borders
-        this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
 
-        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*5 + borderPadding*2, 'pizza', 0, 30, this.conveyors[0])//.setOrigin(0, 0);
-        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*6 + borderPadding*4, 'pizza', 0, 20, this.conveyors[1])//.setOrigin(0,0);
+        this.pizza01 = new Pizza(this, game.config.width + borderUISize*6, borderUISize*3 + borderPadding*2, 'pizza', 0, 30, this.conveyors[0])//.setOrigin(0, 0);
+        this.pizza02 = new Pizza(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*4, 'pizza', 0, 20, this.conveyors[1])//.setOrigin(0,0);
         this.pizza03 = new Pizza(this, game.config.width, borderUISize*7 + borderPadding*6, 'pizza', 0, 10, this.conveyors[2])//.setOrigin(0,0);
         
         this.livingShips = [this.pizza01, this.pizza02, this.pizza03];
@@ -75,6 +92,7 @@ class Play extends Phaser.Scene {
 
         scoreConfig.fixedWidth = 0;
         this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            this.bgm.stop();
             this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart ← or for Menu', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
@@ -126,6 +144,7 @@ class Play extends Phaser.Scene {
 
     pizzaSpread(pizza, toppin = 1){
         if (pizza.checkTopping(toppin)){
+            pizza.track.pause();
             let boom = this.add.sprite(pizza.x, pizza.y, 'explosion').setOrigin(0, 0.5);
             boom.anims.play('explode');
             boom.on('animationcomplete', () => {
